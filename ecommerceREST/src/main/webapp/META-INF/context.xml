@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource
+		name="jdbc/ecommerce"
+		auth="Container"
+		type="javax.sql.DataSource"
+		maxActive="100"
+		maxIdle="30"
+		maxWait="10000"
+		driverClassName="com.mysql.cj.jdbc.Driver"
+		url="jdbc:mysql://lab020-docente:3306/ecommerce_mazzara" 
+		username="mazzara_mario"
+		password="Mamar21@">
+	</Resource>
+</Context>

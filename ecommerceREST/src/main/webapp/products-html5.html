@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>ProductsHTML5</title>
+	<script src="js/jquery-3.6.4.min.js"></script>
+	</head>
+	<body>
+		<table id="productTable" border =1>
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Descrizione</th>                                                                                                                                                         
+					<th>Tipologia</th>
+					<th>Prezzo</th>
+				</tr> 
+			</thead>
+			<tbody class="productBodyTable">
+			</tbody>
+		</table>
+		<button id="fetchButton">FETCH</button>
+	</body>
+	<script type="text/javascript">
+		function fetchProducts(){
+			fetch("api/products")
+				.then(response => response.json())
+				.then(data => buildTable(data))
+				.catch(error => {
+					console.log(error);
+				});
+		}
+		/*function addProducts(){
+			let data={
+				name: inputName.value;
+				description : inputDescription.value,
+				typeId : inpuTypeSelect.value,
+				price: inputPrice.value
+			}
+			fetch("api/products"){
+				method: "POST",
+				body: JSON:Stringify(data)
+			}.catch(error => {
+					console.log(error);
+				});
+		}*/
+		function buildTable(products){
+			let tbody = '';
+			
+			products.forEach(product => {
+				let trow = `<tr>
+								<td>${product.name}</td>
+								<td>${product.description}</td>
+								<td>${product.type}</td>
+								<td>${product.price}</td>
+							</tr>`;
+						tbody += trow;
+			});
+			
+			let productBodyTable = document.querySelector('.productBodyTable');
+			productBodyTable.innerHTML = tbody;
+		}
+		
+		fetchButton.addEventListener("click",fetchProducts());
+	</script>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>Products</title>
+	<script src="js/jquery-3.6.4.min.js"></script>
+	</head>
+	<body>
+		<table id="productTable" border =1>
+			<tr>
+				<th>Codice</th>
+				<th>Nome</th>
+				<th>Descrizione</th>                                                                                                                                                         
+				<th>Tipologia</th>
+				<th>Prezzo</th>
+			</tr>
+		</table>
+		<button id="fetchButton">FETCH</button>
+	</body>
+	<script type="text/javascript">
+		function fetchProducts(){
+			$.ajax({
+				type:"GET",
+				dataType: "json",
+				url: "api/products",
+				data: "",
+				complete: function(data){
+					buildTable(JSON.parse(data.responseText));
+				}
+			})
+		}
+		
+		function buildTable(products){
+			var old_tbody = productTable.tBodies[0];
+			var new_tbody = document.createElement("tbody");
+			[...products].forEach(p => {
+				var row = new_tbody.insertRow(-1);// non c'è add se do -1 diventa add
+				Object.keys(p).forEach(e=> row.insertCell(-1).innerHTML = p[e]);
+			});
+			old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+		}
+		
+		fetchButton.addEventListener("click",fetchProducts());
+	</script>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Aggiungi prodotto</title>
+</head>
+<body>
+	<form>
+		<p>
+			<label for="productName">Name</label>
+			<br/>
+			<input type="text" id="productName" placeholder="Name">
+		</p>
+		<p>
+			<label for="productDescription">Description:</label>
+			<br/>
+			<textarea id="productDescription" placeholder="lorem Ipsum"></textarea>
+		</p>
+		<p>
+			<label for="productType">Product Types</label>
+			<br/>
+			<select id="productType"></select>
+		</p>
+		<p>
+			<label for="productPrice">Price</label>
+			<br/>
+			<input type="number" id="productPrice" placeholder="0">
+		</p>
+	</form>
+<script type="text/javascript">
+function buildSelectOptions(productTypes) {
+	let options ='';
+	
+	productTypes.forEach(type => {
+		let option = `<option value="${type.id}">${type.description}</option>`;
+		option += option;
+		Console.log(option);
+	})
+	productType.innerHTML = options;
+}
+function fetchProductType(){
+	fetch("api/productstype")
+	.then(response => response.json())
+	.then(data => buildSelectOptions(Data))
+	.catch(error => {
+		console.log(error);
+	})
+}
+function addProducts(){
+	var product = buildProduct();
+	fetch("api/products",{
+		method: "POST",
+		headers:{
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json'
+		},
+		body: JSON.Stringify(product)
+	}.catch(error => {console.log(error);}));
+}
+function buildProduct(){
+	let typeId = [];
+	
+	productType.value.split(",").forEach(x=>{
+		typeId.push(Number(x));
+	})
+
+	let data={
+		name: productName.value,
+		escription : productDescription.value,
+		ypeId : typeId,
+		price: Number(productPrice.value)
+		}
+	return data;
+}
+
+addEventListener("DOMContentLoaded", fetchProductType);
+
+</script>
+</body>
+</html>
