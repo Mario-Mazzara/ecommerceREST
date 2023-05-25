@@ -1,6 +1,5 @@
 package service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.naming.Context;
@@ -31,7 +30,7 @@ public class ProductTypeService implements IProductTypeService{
 										+ "WHERE ProductsType.Id = ? ;"
 										;
 	
-	private String deleteTypeQuery =  "DELETE FROM ProductsType "
+	private String deleteTypeQuery =  "UPDATE ProductsType SET hidden = true "
 										+"WHERE ProductsType.id = ? ;"
 										;
 	
@@ -43,7 +42,13 @@ public class ProductTypeService implements IProductTypeService{
 	private String addTypeQuery =  "INSERT INTO ProductsType (id,description) "
 										+ "VALUE (?, ?);"
 										;
-
+	
+	private String getProductByTypeQuery =  "SELECT Products.Id AS id,"
+											+ "FROM Products "
+											+ "WHERE Products.TypeId = ? AND Products.hidden = false "
+											+ "GROUP BY SalePrice.productId HAVING MAX(SalePrice.Date)"
+											+ ";"
+											;
 	
 	
 	private ProductTypeService() {
@@ -111,18 +116,19 @@ public class ProductTypeService implements IProductTypeService{
 	public ProductType deleteType(byte[] id) {
 		try {
 			QueryRunner run = new QueryRunner(dataSource);
+			ResultSetHandler<List<ProductType>> resultSetHandlerProduct = new BeanListHandler<ProductType>(ProductType.class);
+			if(run.query(getProductByTypeQuery,resultSetHandlerProduct, id).size() == 0){
+				throw new Exception();
+			}
 			ResultSetHandler<ProductType> resultSetHandler = new BeanHandler<ProductType>(ProductType.class);
 			ProductType type = run.query(getTypeQuery,resultSetHandler, id);
 			run.execute(deleteTypeQuery,id);
 			return 	type;
-		} catch(SQLException e) {
+		}catch (Exception e) {
+			e.printStackTrace();
 			ProductType fail = ProductTypeFactory.buildDefault();
 			fail.setDescription("Failed Delete");
 			return fail;
-		}catch (Exception e) {
-			e.printStackTrace();
-			
-			return null;
 		}
 	}
 }
