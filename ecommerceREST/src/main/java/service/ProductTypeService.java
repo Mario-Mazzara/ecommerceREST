@@ -11,6 +11,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
+import jakarta.json.Json;
 import library.UUID_utils;
 
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -93,10 +94,10 @@ public class ProductTypeService implements IProductTypeService{
 			QueryRunner run = new QueryRunner(dataSource);
 			ResultSetHandler<ProductType> resultSetHandler = new BeanHandler<ProductType>(ProductType.class);	
 			 run.execute(addTypeQuery, resultSetHandler, UUID_utils.getRandomUUID(), type.getDescription());	
-			 return "Success";
+			 return Json.createObjectBuilder().add("response", "success").toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "Fail";
+			return Json.createObjectBuilder().add("response", "fail").toString();
 		}
 	}
 	@Override

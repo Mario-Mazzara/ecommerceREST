@@ -13,6 +13,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
+import jakarta.json.Json;
 import library.UUID_utils;
 
 import viewmodel.Product;
@@ -167,15 +168,15 @@ public class ProductService implements IProductService {
 			run.execute(conn,addProductQuery,productId ,product.getTypeId(),product.getName(),product.getDescription());
 			run.execute(conn,addSalePriceQuery,salePriceId,productId, product.getPrice());
 			conn.commit();
-			return "Success";
+			return Json.createObjectBuilder().add("response", "success").toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			try {
+			try {;
 				conn.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			return "Fail";
+			return Json.createObjectBuilder().add("response", "fail").toString();
 		}
 	}
 
